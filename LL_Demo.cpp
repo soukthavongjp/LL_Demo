@@ -23,21 +23,16 @@ dbl_node* dbl_tail = nullptr;
 
 
 // Insert at beginning of a DLL
-void insert(string w)
+void insertDouble(const string& w)
 {
     dbl_node* temp = new dbl_node;
-    if (temp == nullptr)
-    {
-        cerr << "NO MEMORY REMAINING!\n";
-        exit(1);
-    }
-
     if (dbl_head == nullptr)
     {
         temp->word = w;
-        temp->next = nullptr; // Point to the front of the list
+        temp->next = nullptr;
         temp->prev = nullptr;
         dbl_head = temp; // Update the front of the list
+        dbl_tail = temp;
     }
     else
     {
@@ -50,26 +45,65 @@ void insert(string w)
 }
 
 // Insert at beginning of a SLL
-void insert(string w)
-{
-
+void insertSingle(const string &w) {
     sngl_node* temp = new sngl_node;
-    if (temp == nullptr)
-    {
-        cerr << "NO MEMORY REMAINING!\n";
-        exit(1);
-    }
 
+    if (sngl_head == nullptr) {
+        sngl_tail = temp;
+    }
     temp->word = w;
-    temp->next = nullptr; // Point to the front of the list
+    temp->next = sngl_head; // Point to the front of the list
     sngl_head = temp; // Update the front of the list
 
 }
 
+// Insert at the end of a SLL with tail
+void insertEndSingle(const string& w) {
+    sngl_node* temp = new sngl_node;
+    temp->word = w;
+    temp->next = nullptr;
+    sngl_tail->next = temp;
+    sngl_tail = temp;
+}
+
+// Insert at the end of a DLL with tail
+void insertEndDouble(const string& w) {
+    dbl_node* temp = new dbl_node;
+    temp->word = w;
+    temp->next = nullptr;
+    dbl_tail->next = temp;
+    temp->prev = dbl_tail;
+    dbl_tail = temp;
+}
+
+void deleteSingle(const string& w) {
+    sngl_node* curr = new sngl_node;
+    sngl_node* prev = nullptr;
+    if (sngl_head != nullptr) {
+        curr = sngl_head;
+    }
+    while (curr != nullptr && curr->word != w) {
+        prev = curr;
+        curr = curr->next;
+    }
+    if (curr == nullptr)
+        cout << w << " is not present in the list." << endl;
+    else if (curr == sngl_head){
+        sngl_head = curr->next;
+        delete curr;
+    }
+    else {
+        prev->next = curr->next;
+        if (curr == sngl_tail)
+            sngl_tail = prev;
+        delete curr;
+    }
+}
+
 // Print the SLL
-void display()
+void displaySingle()
 {
-    cout << "The list: \n";
+    cout << "The list: ";
     sngl_node* temp = sngl_head;
     while (temp != nullptr)
     {
@@ -79,11 +113,55 @@ void display()
     cout << endl;
 }
 
+// Print the DLL
+void displayDouble()
+{
+    cout << "The list: ";
+    dbl_node* temp = dbl_head;
+    while (temp != nullptr)
+    {
+        cout << temp->word << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+void displayHead() {
+  cout << "The head: ";
+  cout << sngl_head->word << "\n";
+}
+
+void displayTail() {
+  cout << "The tail: ";
+  cout << sngl_tail->word << "\n";
+}
 
 int main() {
-    insert("Fred");
-    insert("Mike");
-    insert("Sarah");
-    display();
+    insertSingle("Fred");
+    displayHead();
+    displayTail();
+    insertSingle("Mike");
+    displayHead();
+    displayTail();
+    insertSingle("Sarah");
+    displayHead();
+    displayTail();
+    insertEndSingle("Kyle");
+    displayHead();
+    displayTail();
+    displaySingle();
+    deleteSingle("Sarah");
+    displaySingle();
+    deleteSingle("Fred");
+    displaySingle();
+    deleteSingle("Kyle");
+    displaySingle();
+    cout << endl;
+
+    insertDouble("Erin");
+    insertDouble("Kate");
+    insertDouble("Nadine");
+    insertEndDouble("Ann");
+    displayDouble();
     return 0;
 }
